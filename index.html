@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotler 17e 開放題庫</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root {
+  --ink:#0E0D0B;--ink2:#4A4740;--ink3:#8A8780;
+  --paper:#F9F7F3;--paper2:#F0EDE6;--paper3:#E8E4DA;--rule:#DDD9D0;
+  --emerald:#1A4D3B;--emerald2:#2D7A5F;--emerald-tint:#EAF3EE;
+  --amber:#C4840A;--amber-tint:#FEF6E4;
+  --rose:#8B2635;--rose-tint:#FDF0F2;
+  --blue:#1A3A6B;--blue-tint:#EEF3FA;
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.65;}
+.shell{display:grid;grid-template-columns:270px 1fr;min-height:100vh;}
+.sidebar{background:var(--emerald);padding:2rem 1.5rem 1.5rem;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.brand-title{font-family:'Playfair Display',serif;font-size:21px;color:#fff;line-height:1.2;margin-bottom:3px;}
+.brand-sub{font-size:10.5px;color:rgba(255,255,255,0.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.75rem;}
+.sb-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem;}
+.sb-stat{background:rgba(255,255,255,.08);border-radius:var(--r-sm);padding:9px 11px;}
+.sb-stat-val{font-family:'Playfair Display',serif;font-size:21px;color:#fff;}
+.sb-stat-lbl{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px;text-transform:uppercase;letter-spacing:.05em;}
+.sb-div{height:1px;background:rgba(255,255,255,.1);margin:.875rem 0;}
+.sb-lbl{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
+.sb-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 11px;margin-bottom:2px;background:transparent;border:none;border-radius:var(--r-sm);color:rgba(255,255,255,.65);font-size:13.5px;font-family:'IBM Plex Sans',sans-serif;cursor:pointer;text-align:left;transition:background .15s,color .15s;}
+.sb-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.sb-btn.active{background:rgba(255,255,255,.18);color:#fff;font-weight:500;}
+.ch-filter{margin-top:.5rem;}
+.ch-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:9999px;margin:2px;font-size:11.5px;cursor:pointer;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55);border:1px solid transparent;transition:background .12s;}
+.ch-pill:hover{background:rgba(255,255,255,.14);color:rgba(255,255,255,.85);}
+.ch-pill.active{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.25);}
+.ch-pill .ct{font-size:10px;opacity:.6;}
+.main{padding:2.5rem;max-width:900px;}
+.view{display:none;}.view.active{display:block;}
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:1px solid var(--rule);}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;}
+.page-sub{font-size:13px;color:var(--ink3);margin-top:3px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--r-sm);font-size:13.5px;font-weight:500;font-family:'IBM Plex Sans',sans-serif;cursor:pointer;border:1px solid var(--rule);background:#fff;color:var(--ink);transition:background .12s;}
+.btn:hover{background:var(--paper2);}
+.btn-primary{background:var(--emerald);color:#fff;border-color:var(--emerald);}
+.btn-primary:hover{background:var(--emerald2);border-color:var(--emerald2);}
+.btn-sm{padding:6px 12px;font-size:12.5px;}
+.btn:disabled{opacity:.4;cursor:default;pointer-events:none;}
+.card{background:#fff;border:1px solid var(--rule);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;}
+.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:9999px;font-size:11.5px;font-weight:500;}
+.tag-green{background:var(--emerald-tint);color:var(--emerald);}
+.tag-amber{background:var(--amber-tint);color:var(--amber);}
+.tag-rose{background:var(--rose-tint);color:var(--rose);}
+.tag-blue{background:var(--blue-tint);color:var(--blue);}
+.tag-gray{background:var(--paper2);color:var(--ink2);}
+.q-card{background:#fff;border:1px solid var(--rule);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:10px;transition:border-color .15s,box-shadow .15s;}
+.q-card:hover{border-color:#C8C4BB;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.q-card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.q-text{font-size:14.5px;line-height:1.65;margin-bottom:.75rem;}
+.q-options{display:flex;flex-direction:column;gap:5px;}
+.q-opt{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink2);padding:5px 8px;border-radius:var(--r-sm);}
+.q-opt.correct{background:var(--emerald-tint);color:var(--emerald);}
+.q-opt .ltr{width:20px;height:20px;border-radius:50%;flex-shrink:0;background:var(--paper2);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;margin-top:1px;}
+.q-opt.correct .ltr{background:var(--emerald);color:#fff;}
+.q-explain{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--rule);}
+.gen-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem;}
+.form-field{display:flex;flex-direction:column;gap:5px;}
+.form-label{font-size:12px;color:var(--ink2);font-weight:500;}
+select,input{padding:8px 12px;border-radius:var(--r-sm);border:1px solid var(--rule);font-size:13.5px;font-family:'IBM Plex Sans',sans-serif;background:#fff;color:var(--ink);}
+select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
+.quiz-prog{display:flex;gap:5px;margin-bottom:1.25rem;}
+.qp{height:4px;flex:1;border-radius:9999px;background:var(--paper3);transition:background .3s;}
+.qp.done{background:var(--emerald);}.qp.cur{background:var(--amber);}
+.live-q-text{font-size:16px;line-height:1.7;margin-bottom:1rem;}
+.live-opts{display:flex;flex-direction:column;gap:8px;}
+.live-opt{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:var(--r-sm);border:1px solid var(--rule);background:#fff;cursor:pointer;font-size:14px;line-height:1.5;font-family:'IBM Plex Sans',sans-serif;transition:border-color .12s,background .12s;text-align:left;}
+.live-opt:hover:not(:disabled):not(.c):not(.w){border-color:#B8B4AA;background:var(--paper2);}
+.live-opt.c{border-color:var(--emerald2);background:var(--emerald-tint);}
+.live-opt.w{border-color:var(--rose);background:var(--rose-tint);}
+.live-opt:disabled{cursor:default;}
+.live-opt .oltr{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;margin-top:1px;transition:background .12s,border-color .12s;}
+.live-opt.c .oltr{background:var(--emerald);border-color:var(--emerald);color:#fff;}
+.live-opt.w .oltr{background:var(--rose);border-color:var(--rose);color:#fff;}
+.exp-box{display:none;padding:11px 15px;border-radius:var(--r-sm);font-size:13.5px;line-height:1.65;margin-top:10px;}
+.exp-box.show{display:block;}
+.exp-box.ok{background:var(--emerald-tint);border-left:3px solid var(--emerald2);color:#15392B;}
+.exp-box.fail{background:var(--rose-tint);border-left:3px solid var(--rose);color:#4A0F18;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.stat-box{background:#fff;border:1px solid var(--rule);border-radius:var(--r-sm);padding:1rem;text-align:center;}
+.stat-val{font-family:'Playfair Display',serif;font-size:28px;}
+.stat-lbl{font-size:11px;color:var(--ink3);margin-top:2px;}
+.bar-chart{display:flex;flex-direction:column;gap:8px;}
+.bar-row{display:flex;align-items:center;gap:10px;}
+.bar-label{font-size:12.5px;color:var(--ink2);width:180px;flex-shrink:0;}
+.bar-track{flex:1;height:8px;background:var(--paper3);border-radius:9999px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:9999px;background:var(--emerald);transition:width .6s ease;}
+.bar-count{font-size:12px;color:var(--ink3);min-width:28px;text-align:right;font-family:'IBM Plex Mono',monospace;}
+.ai-dots{display:inline-flex;gap:4px;align-items:center;padding:.5rem 0;}
+.ai-d{width:7px;height:7px;border-radius:50%;background:var(--emerald);animation:aiB 1.2s ease-in-out infinite;}
+.ai-d:nth-child(2){animation-delay:.2s;}.ai-d:nth-child(3){animation-delay:.4s;}
+@keyframes aiB{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.notice{padding:10px 14px;border-radius:var(--r-sm);font-size:13px;line-height:1.6;border-left:3px solid var(--amber);background:var(--amber-tint);color:#5A3A00;margin-bottom:1rem;}
+.notice-green{border-color:var(--emerald2);background:var(--emerald-tint);color:#15392B;}
+.notice-blue{border-color:var(--blue);background:var(--blue-tint);color:#0E2548;}
+.export-box{background:var(--paper2);border-radius:var(--r);padding:1.25rem 1.5rem;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:1rem;}
+.divider{height:1px;background:var(--rule);margin:1.25rem 0;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem;}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--ink3);}
+.empty-state .big{font-size:40px;margin-bottom:.75rem;}
+.live-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--emerald2);font-weight:500;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--emerald2);animation:livePulse 1.5s ease-in-out infinite;}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--rule);border-radius:9999px;}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="brand-title">Kotler 17e<br>開放題庫</div>
+  <div class="brand-sub">Principles of Marketing · Firebase</div>
+  <div class="sb-stat-row">
+    <div class="sb-stat"><div class="sb-stat-val" id="sb-total">…</div><div class="sb-stat-lbl">總題數</div></div>
+    <div class="sb-stat"><div class="sb-stat-val" id="sb-ch-count">…</div><div class="sb-stat-lbl">涵蓋章節</div></div>
+    <div class="sb-stat"><div class="sb-stat-val" id="sb-contrib">…</div><div class="sb-stat-lbl">貢獻人次</div></div>
+    <div class="sb-stat"><div class="sb-stat-val" id="sb-acc">…</div><div class="sb-stat-lbl">平均正確率</div></div>
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">功能</div>
+  <button class="sb-btn active" onclick="showView('browse')" id="nav-browse">📚 瀏覽題庫</button>
+  <button class="sb-btn" onclick="showView('generate')" id="nav-generate">✨ 生成新題目</button>
+  <button class="sb-btn" onclick="showView('quiz')" id="nav-quiz">📝 隨機測驗</button>
+  <button class="sb-btn" onclick="showView('stats')" id="nav-stats">📊 題庫統計</button>
+  <button class="sb-btn" onclick="showView('export')" id="nav-export">💾 匯出題庫</button>
+  <div class="sb-div"></div>
+  <div class="sb-lbl">篩選章節</div>
+  <div class="ch-filter" id="ch-filter">
+    <div class="ch-pill active" data-ch="all" onclick="filterCh('all')">全部 <span class="ct" id="ct-all">0</span></div>
+  </div>
+</aside>
+<main class="main">
+
+  <!-- Browse -->
+  <div class="view active" id="view-browse">
+    <div class="page-header">
+      <div>
+        <div class="page-title">題庫瀏覽</div>
+        <div class="page-sub" style="display:flex;align-items:center;gap:8px;">
+          <span>所有人貢獻的題目即時同步</span>
+          <span class="live-badge"><span class="live-dot"></span>Firebase 即時同步</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showView('generate')">＋ 生成新題目</button>
+    </div>
+    <div class="notice notice-blue">💡 <strong>共享題庫</strong>：任何拿到這個頁面連結的人，看到的都是同一份題庫，互相即時同步。</div>
+    <div id="browse-list"><div class="empty-state"><div class="big">⏳</div><div>連接 Firebase 中…</div></div></div>
+  </div>
+
+  <!-- Generate -->
+  <div class="view" id="view-generate">
+    <div class="page-header">
+      <div><div class="page-title">生成新題目</div><div class="page-sub">AI 出題，自動存進 Firebase 共享題庫</div></div>
+    </div>
+    <div class="card">
+      <div class="gen-form">
+        <div class="form-field"><label class="form-label">章節</label>
+          <select id="gen-ch">
+            <option value="0">隨機章節</option>
+            <option value="1">Ch.1 Marketing: Creating Customer Value</option>
+            <option value="2">Ch.2 Company and Marketing Strategy</option>
+            <option value="3">Ch.3 Analyzing the Marketing Environment</option>
+            <option value="4">Ch.4 Managing Marketing Information</option>
+            <option value="5">Ch.5 Consumer Markets and Buyer Behavior</option>
+            <option value="6">Ch.6 Business Markets and Business Buyer Behavior</option>
+            <option value="7">Ch.7 Customer Value–Driven Marketing Strategy</option>
+            <option value="8">Ch.8 Products, Services, and Brands</option>
+            <option value="9">Ch.9 Developing New Products and Managing PLC</option>
+            <option value="10">Ch.10 Pricing: Understanding and Capturing Value</option>
+            <option value="11">Ch.11 Pricing Strategies: Additional Considerations</option>
+            <option value="12">Ch.12 Marketing Channels: Delivering Customer Value</option>
+            <option value="13">Ch.13 Retailing and Wholesaling</option>
+            <option value="14">Ch.14 Integrated Marketing Communication Strategy</option>
+            <option value="15">Ch.15 Advertising and Public Relations</option>
+            <option value="16">Ch.16 Personal Selling and Sales Promotion</option>
+            <option value="17">Ch.17 Direct, Online, Social Media, and Mobile Marketing</option>
+            <option value="18">Ch.18 Creating Competitive Advantage</option>
+            <option value="19">Ch.19 The Global Marketplace</option>
+            <option value="20">Ch.20 Sustainable Marketing</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="form-label">難度</label>
+          <select id="gen-diff">
+            <option value="easy">基礎（定義與概念）</option>
+            <option value="medium" selected>中等（理解與應用）</option>
+            <option value="hard">進階（分析與評估）</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="form-label">題目類型</label>
+          <select id="gen-type">
+            <option value="concept">概念題</option>
+            <option value="case">情境應用題</option>
+            <option value="analysis">分析比較題</option>
+          </select>
+        </div>
+        <div class="form-field"><label class="form-label">一次生成幾題</label>
+          <select id="gen-count">
+            <option value="1">1 題</option>
+            <option value="3" selected>3 題</option>
+            <option value="5">5 題</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="gen-btn" onclick="generateQuestions()">✨ 生成並存入 Firebase</button>
+    </div>
+    <div id="gen-output"></div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="view" id="view-quiz">
+    <div class="page-header"><div><div class="page-title">隨機測驗</div><div class="page-sub">從 Firebase 題庫抽題，作答紀錄即時回寫</div></div></div>
+    <div id="quiz-setup">
+      <div class="card">
+        <h3 style="margin-bottom:1rem;font-size:15px;">設定測驗</h3>
+        <div class="gen-form">
+          <div class="form-field"><label class="form-label">題目數量</label>
+            <select id="qz-count">
+              <option value="5">5 題</option>
+              <option value="10" selected>10 題</option>
+              <option value="20">20 題</option>
+            </select>
+          </div>
+          <div class="form-field"><label class="form-label">章節範圍</label>
+            <select id="qz-ch">
+              <option value="all">全部章節</option>
+              <option value="1-6">Part 1+2（Ch.1-6）</option>
+              <option value="7-17">Part 3（Ch.7-17）</option>
+              <option value="18-20">Part 4（Ch.18-20）</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="startQuiz()">開始測驗 →</button>
+        <div id="qz-warn" class="notice" style="display:none;margin-top:1rem;">題庫題目不足，請先生成更多題目。</div>
+      </div>
+    </div>
+    <div id="quiz-area" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <div class="tag tag-amber" id="qz-counter">1 / 10</div>
+        <button class="btn btn-sm" onclick="endQuizEarly()">結束測驗</button>
+      </div>
+      <div class="quiz-prog" id="qz-prog"></div>
+      <div class="card" id="qz-q-card">
+        <div style="font-size:12px;color:var(--ink3);margin-bottom:6px;" id="qz-meta"></div>
+        <div class="live-q-text" id="qz-q-text"></div>
+        <div class="live-opts" id="qz-opts"></div>
+        <div class="exp-box" id="qz-exp"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" id="qz-next-btn" style="display:none;" onclick="qzNext()">下一題 →</button></div>
+    </div>
+    <div id="quiz-result" style="display:none;">
+      <div class="card" style="text-align:center;padding:2rem;">
+        <div style="font-family:'Playfair Display',serif;font-size:56px;" id="qz-final-score">0/10</div>
+        <div style="color:var(--ink3);font-size:14px;margin-top:4px;" id="qz-final-pct"></div>
+        <div style="font-size:14px;color:var(--ink2);margin-top:1.25rem;line-height:1.7;" id="qz-final-msg"></div>
+        <div class="btn-row" style="justify-content:center;margin-top:1.5rem;">
+          <button class="btn btn-primary" onclick="startQuiz()">再來一次 →</button>
+          <button class="btn" onclick="resetQuizView()">重新設定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="view" id="view-stats">
+    <div class="page-header"><div><div class="page-title">題庫統計</div><div class="page-sub">即時反映所有人的貢獻與作答紀錄</div></div></div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val" id="st-total">…</div><div class="stat-lbl">題目總數</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-attempts">…</div><div class="stat-lbl">作答總次數</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-acc">…</div><div class="stat-lbl">整體正確率</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-chcov">…</div><div class="stat-lbl">章節覆蓋率</div></div>
+    </div>
+    <div class="card"><h3 style="margin-bottom:1rem;font-size:14px;">各章題目數量</h3><div class="bar-chart" id="ch-bar-chart"></div></div>
+    <div class="card"><h3 style="margin-bottom:1rem;font-size:14px;">難度分佈</h3><div class="bar-chart" id="diff-bar-chart"></div></div>
+  </div>
+
+  <!-- Export -->
+  <div class="view" id="view-export">
+    <div class="page-header"><div><div class="page-title">匯出題庫</div><div class="page-sub">從 Firebase 下載完整題庫</div></div></div>
+    <div class="card">
+      <h3 style="margin-bottom:.75rem;font-size:14px;">匯出格式</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <button class="btn" onclick="exportJSON()">📄 JSON 完整版</button>
+        <button class="btn" onclick="exportCSV()">📊 CSV（Excel用）</button>
+        <button class="btn" onclick="exportAnki()">🃏 Anki 格式</button>
+      </div>
+      <div class="notice">JSON 包含所有欄位與作答統計。CSV 可直接用 Excel 開啟。Anki 格式可匯入抽認卡練習。</div>
+      <h3 style="margin-bottom:.75rem;margin-top:1rem;font-size:14px;">題庫預覽</h3>
+      <div class="export-box" id="export-preview">載入中…</div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, set, push, update, onValue, runTransaction }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDqNUQ8-BQcW3VyMiXbbDdAp_S4QofEEp8",
+  authDomain: "kotler-qbank.firebaseapp.com",
+  databaseURL: "https://kotler-qbank-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kotler-qbank",
+  storageBucket: "kotler-qbank.firebasestorage.app",
+  messagingSenderId: "2425664438",
+  appId: "1:2425664438:web:522bd8137d77b8de760717"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
+
+const CH_TITLES = {
+  1:"Marketing: Creating Customer Value",2:"Company and Marketing Strategy",
+  3:"Analyzing the Marketing Environment",4:"Managing Marketing Information",
+  5:"Consumer Markets and Buyer Behavior",6:"Business Markets and Business Buyer Behavior",
+  7:"Customer Value–Driven Marketing Strategy",8:"Products, Services, and Brands",
+  9:"Developing New Products and Managing PLC",10:"Pricing: Understanding and Capturing Value",
+  11:"Pricing Strategies: Additional Considerations",12:"Marketing Channels: Delivering Customer Value",
+  13:"Retailing and Wholesaling",14:"Integrated Marketing Communication Strategy",
+  15:"Advertising and Public Relations",16:"Personal Selling and Sales Promotion",
+  17:"Direct, Online, Social Media, and Mobile Marketing",18:"Creating Competitive Advantage",
+  19:"The Global Marketplace",20:"Sustainable Marketing"
+};
+
+// ── Firebase helpers ─────────────────────────────────────────────
+async function fbGetQuestions() {
+  const snap = await get(ref(db, 'questions'));
+  if (!snap.exists()) return [];
+  const obj = snap.val();
+  return Object.entries(obj).map(([id, q]) => ({ ...q, firebaseId: id }));
+}
+
+async function fbAddQuestion(q) {
+  const newRef = push(ref(db, 'questions'));
+  await set(newRef, { ...q, id: newRef.key, addedAt: new Date().toISOString(), attempts: 0, correct: 0 });
+  return newRef.key;
+}
+
+async function fbRecordAnswer(firebaseId, wasCorrect) {
+  const qRef = ref(db, `questions/${firebaseId}`);
+  await runTransaction(qRef, (q) => {
+    if (q) {
+      q.attempts = (q.attempts || 0) + 1;
+      if (wasCorrect) q.correct = (q.correct || 0) + 1;
+    }
+    return q;
+  });
+  // Global meta
+  const metaRef = ref(db, 'meta');
+  await runTransaction(metaRef, (meta) => {
+    meta = meta || { totalAttempts: 0, totalCorrect: 0 };
+    meta.totalAttempts = (meta.totalAttempts || 0) + 1;
+    if (wasCorrect) meta.totalCorrect = (meta.totalCorrect || 0) + 1;
+    return meta;
+  });
+}
+
+async function fbIncrContrib() {
+  await runTransaction(ref(db, 'meta/contribs'), (v) => (v || 0) + 1);
+}
+
+// ── Realtime sidebar listener ─────────────────────────────────────
+let allQuestions = [];
+onValue(ref(db, 'questions'), (snap) => {
+  allQuestions = snap.exists()
+    ? Object.entries(snap.val()).map(([id, q]) => ({ ...q, firebaseId: id }))
+    : [];
+  updateSidebarStats();
+  if (document.getElementById('view-browse').classList.contains('active')) renderBrowse();
+  if (document.getElementById('view-stats').classList.contains('active')) renderStats();
+  if (document.getElementById('view-export').classList.contains('active')) renderExport();
+});
+
+onValue(ref(db, 'meta'), (snap) => {
+  const meta = snap.exists() ? snap.val() : {};
+  const ta = meta.totalAttempts || 0;
+  const tc = meta.totalCorrect || 0;
+  document.getElementById('sb-contrib').textContent = meta.contribs || 0;
+  document.getElementById('sb-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
+  document.getElementById('st-attempts').textContent = ta;
+  document.getElementById('st-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
+});
+
+function updateSidebarStats() {
+  const qs = allQuestions;
+  document.getElementById('sb-total').textContent = qs.length;
+  const chs = new Set(qs.map(q => q.chapter)).size;
+  document.getElementById('sb-ch-count').textContent = chs;
+  document.getElementById('ct-all').textContent = qs.length;
+
+  const chCounts = {};
+  qs.forEach(q => { chCounts[q.chapter] = (chCounts[q.chapter] || 0) + 1; });
+  const cf = document.getElementById('ch-filter');
+  cf.innerHTML = `<div class="ch-pill ${window._curFilter === 'all' ? 'active' : ''}" data-ch="all" onclick="filterCh('all')">全部 <span class="ct">${qs.length}</span></div>`;
+  Object.keys(chCounts).sort((a, b) => a - b).forEach(ch => {
+    const d = document.createElement('div');
+    d.className = 'ch-pill' + (window._curFilter == ch ? ' active' : '');
+    d.dataset.ch = ch;
+    d.innerHTML = `Ch.${ch} <span class="ct">${chCounts[ch]}</span>`;
+    d.onclick = () => filterCh(ch);
+    cf.appendChild(d);
+  });
+}
+
+// ── Navigation ────────────────────────────────────────────────────
+window._curFilter = 'all';
+window.showView = function(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById('nav-' + id);
+  if (nb) nb.classList.add('active');
+  if (id === 'browse') renderBrowse();
+  if (id === 'stats') renderStats();
+  if (id === 'export') renderExport();
+};
+
+window.filterCh = function(ch) {
+  window._curFilter = ch;
+  document.querySelectorAll('.ch-pill').forEach(p => p.classList.toggle('active', p.dataset.ch == ch));
+  renderBrowse();
+};
+
+// ── Browse ────────────────────────────────────────────────────────
+function renderBrowse() {
+  let qs = [...allQuestions].reverse();
+  if (window._curFilter !== 'all') qs = qs.filter(q => q.chapter == window._curFilter);
+  const el = document.getElementById('browse-list');
+  if (!qs.length) {
+    el.innerHTML = `<div class="empty-state"><div class="big">📭</div><div>${window._curFilter === 'all' ? '題庫尚無題目' : '此章節尚無題目'}</div><div style="font-size:13px;margin-top:4px;">點「生成新題目」開始貢獻！</div></div>`;
+    return;
+  }
+  el.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  qs.forEach(q => {
+    const acc = q.attempts > 0 ? Math.round(q.correct / q.attempts * 100) + '%' : '—';
+    const dl = { easy: '基礎', medium: '中等', hard: '進階' }[q.difficulty] || q.difficulty;
+    const opts = (q.options || []).map((opt, i) =>
+      `<div class="q-opt ${i === q.answer ? 'correct' : ''}"><div class="ltr">${letters[i]}</div><span>${opt}</span></div>`
+    ).join('');
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.innerHTML = `
+      <div class="q-card-meta">
+        <span class="tag tag-green">Ch.${q.chapter}</span>
+        <span class="tag tag-gray">${q.topic || ''}</span>
+        <span class="tag ${q.difficulty === 'hard' ? 'tag-rose' : q.difficulty === 'easy' ? 'tag-blue' : 'tag-amber'}">${dl}</span>
+        ${q.attempts > 0 ? `<span class="tag tag-gray" style="margin-left:auto;">正確率 ${acc} (${q.attempts}次)</span>` : ''}
+      </div>
+      <div class="q-text">${q.question}</div>
+      <div class="q-options">${opts}</div>
+      ${q.explanation ? `<div class="q-explain">📖 ${q.explanation}</div>` : ''}`;
+    el.appendChild(card);
+  });
+}
+
+// ── Generate ──────────────────────────────────────────────────────
+window.generateQuestions = async function() {
+  const chSel = parseInt(document.getElementById('gen-ch').value);
+  const diff = document.getElementById('gen-diff').value;
+  const type = document.getElementById('gen-type').value;
+  const count = parseInt(document.getElementById('gen-count').value);
+  const ch = chSel === 0 ? Math.ceil(Math.random() * 20) : chSel;
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> AI 生成中…';
+  const out = document.getElementById('gen-output');
+  out.innerHTML = `<div class="card" style="text-align:center;padding:1.5rem;color:var(--ink3);"><div class="ai-dots"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div></div><div style="font-size:13px;margin-top:8px;">生成 Chapter ${ch} 題目中…</div></div>`;
+
+  const existingTopics = allQuestions.filter(q => q.chapter == ch).map(q => q.topic);
+  const diffMap = { easy: 'basic definition and recall', medium: 'understanding and application', hard: 'analysis, evaluation, and synthesis' };
+  const typeMap = { concept: 'conceptual understanding', case: 'scenario-based application', analysis: 'comparison and critical analysis' };
+
+  const prompt = `You are a marketing professor creating exam questions for Kotler & Armstrong "Principles of Marketing" 17th edition, Chapter ${ch}: "${CH_TITLES[ch]}".
+Generate EXACTLY ${count} multiple-choice questions.
+Difficulty: ${diffMap[diff]}. Type: ${typeMap[type]}.
+${existingTopics.length ? `Already covered topics: ${existingTopics.join(', ')}. Cover DIFFERENT concepts.` : ''}
+All questions and options in Traditional Chinese. Make distractors plausible.
+Respond ONLY with valid JSON array (no markdown):
+[{"chapter":${ch},"topic":"概念(4-8字)","difficulty":"${diff}","type":"${type}","question":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解說(2-3句)"}]`;
+
+  try {
+    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: MODEL, max_tokens: 2000, messages: [{ role: 'user', content: prompt }] }) });
+    const data = await res.json();
+    const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('No JSON');
+    const newQs = JSON.parse(match[0]);
+
+    // Save to Firebase
+    for (const q of newQs) await fbAddQuestion(q);
+    await fbIncrContrib();
+
+    out.innerHTML = `<div class="notice notice-green">✅ 成功生成 ${newQs.length} 題，已存入 Firebase 共享題庫</div>`;
+    const letters = ['A', 'B', 'C', 'D'];
+    newQs.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'q-card';
+      div.innerHTML = `
+        <div class="q-card-meta"><span class="tag tag-green">Ch.${q.chapter}</span><span class="tag tag-gray">${q.topic||''}</span><span class="tag tag-blue" style="margin-left:auto;">新加入 ✓</span></div>
+        <div class="q-text">${q.question}</div>
+        <div class="q-options">${q.options.map((o,i)=>`<div class="q-opt ${i===q.answer?'correct':''}"><div class="ltr">${letters[i]}</div><span>${o}</span></div>`).join('')}</div>
+        ${q.explanation?`<div class="q-explain">📖 ${q.explanation}</div>`:''}`;
+      out.appendChild(div);
+    });
+  } catch (e) {
+    out.innerHTML = `<div class="notice">生成失敗，請重試。(${e.message})</div>`;
+  }
+  btn.disabled = false;
+  btn.innerHTML = '✨ 生成並存入 Firebase';
+};
+
+// ── Quiz ──────────────────────────────────────────────────────────
+let qzState = { questions: [], idx: 0, score: 0, total: 0 };
+
+window.startQuiz = function() {
+  const total = parseInt(document.getElementById('qz-count').value);
+  const chRange = document.getElementById('qz-ch').value;
+  let pool = [...allQuestions];
+  if (chRange !== 'all') {
+    const [a, b] = chRange.split('-').map(Number);
+    pool = pool.filter(q => q.chapter >= a && q.chapter <= b);
+  }
+  if (pool.length < 3) { document.getElementById('qz-warn').style.display = 'block'; return; }
+  // Prioritize less-attempted questions
+  pool.sort((a, b) => (a.attempts || 0) - (b.attempts || 0));
+  const picked = pool.slice(0, Math.min(total, pool.length)).sort(() => Math.random() - 0.5);
+  qzState = { questions: picked, idx: 0, score: 0, total: picked.length };
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('qz-warn').style.display = 'none';
+  renderQzProg(); renderQzQ();
+};
+
+function renderQzProg() {
+  const dots = document.getElementById('qz-prog');
+  dots.innerHTML = '';
+  for (let i = 0; i < qzState.total; i++) {
+    const d = document.createElement('div');
+    d.className = 'qp' + (i < qzState.idx ? ' done' : i === qzState.idx ? ' cur' : '');
+    dots.appendChild(d);
+  }
+  document.getElementById('qz-counter').textContent = `${qzState.idx + 1} / ${qzState.total}`;
+  document.getElementById('qz-next-btn').style.display = 'none';
+}
+
+function renderQzQ() {
+  const q = qzState.questions[qzState.idx];
+  document.getElementById('qz-meta').textContent = `Chapter ${q.chapter} · ${q.topic || ''} · ${{ easy: '基礎', medium: '中等', hard: '進階' }[q.difficulty] || ''}`;
+  document.getElementById('qz-q-text').textContent = q.question;
+  const opts = document.getElementById('qz-opts');
+  opts.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  (q.options || []).forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'live-opt';
+    btn.innerHTML = `<span class="oltr">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectQzAnswer(i, q);
+    opts.appendChild(btn);
+  });
+  document.getElementById('qz-exp').className = 'exp-box';
+  document.getElementById('qz-exp').textContent = '';
+}
+
+async function selectQzAnswer(idx, q) {
+  document.getElementById('qz-opts').querySelectorAll('.live-opt').forEach(b => b.disabled = true);
+  const correct = idx === q.answer;
+  const opts = document.getElementById('qz-opts').querySelectorAll('.live-opt');
+  opts[idx].classList.add(correct ? 'c' : 'w');
+  if (!correct) opts[q.answer].classList.add('c');
+  const exp = document.getElementById('qz-exp');
+  exp.className = 'exp-box show ' + (correct ? 'ok' : 'fail');
+  exp.textContent = (correct ? '✓ 正確！' : '✗ 錯了。') + (q.explanation ? ' ' + q.explanation : '');
+  if (correct) qzState.score++;
+  if (q.firebaseId) await fbRecordAnswer(q.firebaseId, correct);
+  const nb = document.getElementById('qz-next-btn');
+  nb.style.display = 'inline-flex';
+  nb.textContent = qzState.idx < qzState.total - 1 ? '下一題 →' : '查看結果 →';
+}
+
+window.qzNext = function() {
+  qzState.idx++;
+  if (qzState.idx >= qzState.total) { finishQuiz(); return; }
+  renderQzProg(); renderQzQ();
+};
+
+function finishQuiz() {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('quiz-result').style.display = 'block';
+  const pct = Math.round(qzState.score / qzState.total * 100);
+  document.getElementById('qz-final-score').textContent = `${qzState.score}/${qzState.total}`;
+  document.getElementById('qz-final-pct').textContent = `正確率 ${pct}%`;
+  document.getElementById('qz-final-msg').textContent =
+    ['繼續加油，多做幾次就能掌握！', '還不錯！重點概念已有基礎。', '表現良好，繼續保持！', '優秀！你對行銷學有深入理解。']
+    [Math.min(Math.floor(pct / 25), 3)];
+}
+
+window.endQuizEarly = finishQuiz;
+window.resetQuizView = function() {
+  document.getElementById('quiz-setup').style.display = 'block';
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('quiz-result').style.display = 'none';
+};
+
+// ── Stats ─────────────────────────────────────────────────────────
+function renderStats() {
+  const qs = allQuestions;
+  document.getElementById('st-total').textContent = qs.length;
+  const chCov = new Set(qs.map(q => q.chapter)).size;
+  document.getElementById('st-chcov').textContent = `${chCov}/20`;
+
+  const chCounts = {};
+  for (let i = 1; i <= 20; i++) chCounts[i] = 0;
+  qs.forEach(q => { chCounts[q.chapter] = (chCounts[q.chapter] || 0) + 1; });
+  const maxCh = Math.max(...Object.values(chCounts), 1);
+  const bc = document.getElementById('ch-bar-chart');
+  bc.innerHTML = '';
+  for (let i = 1; i <= 20; i++) {
+    const r = document.createElement('div'); r.className = 'bar-row';
+    r.innerHTML = `<div class="bar-label">Ch.${i} ${(CH_TITLES[i]||'').substring(0,18)}…</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(chCounts[i]/maxCh*100)}%"></div></div>
+      <div class="bar-count">${chCounts[i]}</div>`;
+    bc.appendChild(r);
+  }
+  const dc = { easy: 0, medium: 0, hard: 0 };
+  qs.forEach(q => { if (dc[q.difficulty] !== undefined) dc[q.difficulty]++; });
+  const maxD = Math.max(...Object.values(dc), 1);
+  const dbc = document.getElementById('diff-bar-chart');
+  dbc.innerHTML = '';
+  [['easy', '基礎（定義與概念）'], ['medium', '中等（理解與應用）'], ['hard', '進階（分析與評估）']].forEach(([k, label]) => {
+    const r = document.createElement('div'); r.className = 'bar-row';
+    r.innerHTML = `<div class="bar-label">${label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(dc[k]/maxD*100)}%"></div></div>
+      <div class="bar-count">${dc[k]}</div>`;
+    dbc.appendChild(r);
+  });
+}
+
+// ── Export ────────────────────────────────────────────────────────
+function renderExport() {
+  const preview = JSON.stringify(allQuestions.slice(0, 3), null, 2) + `\n\n// … 共 ${allQuestions.length} 題（從 Firebase 即時讀取）`;
+  document.getElementById('export-preview').textContent = preview;
+}
+
+window.exportJSON = function() {
+  const blob = new Blob([JSON.stringify(allQuestions, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `kotler17e_firebase_${new Date().toISOString().slice(0,10)}.json`; a.click();
+};
+
+window.exportCSV = function() {
+  const rows = [['id','chapter','topic','difficulty','type','question','optA','optB','optC','optD','answer','explanation','attempts','correct']];
+  allQuestions.forEach(q => {
+    rows.push([q.firebaseId, q.chapter, q.topic||'', q.difficulty, q.type||'',
+      '"'+(q.question||'').replace(/"/g,'""')+'"',
+      ...(q.options||[]).map(o=>'"'+o.replace(/"/g,'""')+'"'),
+      q.answer, '"'+(q.explanation||'').replace(/"/g,'""')+'"',
+      q.attempts||0, q.correct||0]);
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `kotler17e_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+};
+
+window.exportAnki = function() {
+  const lines = allQuestions.map(q => {
+    const front = `[Ch.${q.chapter}] ${q.question}`;
+    const opts = (q.options||[]).map((o,i)=>`${String.fromCharCode(65+i)}) ${o}`).join('<br>');
+    const back = `正確答案：${String.fromCharCode(65+q.answer)}) ${(q.options||[])[q.answer]}<br><br>${q.explanation||''}`;
+    return `"${front}<br><br>${opts}"\t"${back}"`;
+  }).join('\n');
+  const blob = new Blob([lines], { type: 'text/plain' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `kotler17e_anki_${new Date().toISOString().slice(0,10)}.txt`; a.click();
+};
+
+</script>
+</body>
+</html>
