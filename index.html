@@ -114,6 +114,64 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--rule);border-radius:9999px;}
+
+/* ── Mobile Navigation ───────────────────────────────────────────── */
+.mob-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--emerald);
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+.mob-nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; color: rgba(255,255,255,0.6);
+  font-size: 11px; font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; padding: 6px 4px; transition: color 0.15s;
+}
+.mob-nav-btn .ico { font-size: 20px; }
+.mob-nav-btn.active { color: #fff; font-weight: 500; }
+
+/* ── Mobile stats bar ────────────────────────────────────────────── */
+.mob-stats {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1.25rem;
+}
+.mob-stat {
+  background: #fff; padding: 10px 8px; text-align: center;
+}
+.mob-stat-v { font-family: 'Playfair Display', serif; font-size: 18px; }
+.mob-stat-l { font-size: 9px; color: var(--ink3); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ── Responsive breakpoints ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .mob-nav { display: grid; }
+  .mob-stats { display: grid; }
+  .main {
+    padding: 1.25rem 1rem 80px;
+    max-width: 100%;
+  }
+  .page-title { font-size: 20px; }
+  .page-header { margin-bottom: 1.25rem; padding-bottom: .75rem; }
+  .q-card { padding: 1rem; }
+  .q-text { font-size: 14px; }
+  .live-q-text { font-size: 15px; }
+  .live-opt { padding: 10px 12px; font-size: 13.5px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .gen-form { grid-template-columns: 1fr; }
+  .bar-label { width: 120px; font-size: 11.5px; }
+  .btn { padding: 10px 16px; font-size: 13px; }
+  .card { padding: 1rem; }
+  .notice { font-size: 12.5px; }
+  .q-explain { font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -139,6 +197,14 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
   </div>
 </aside>
 <main class="main">
+
+<!-- Mobile stats -->
+<div class="mob-stats">
+  <div class="mob-stat"><div class="mob-stat-v" id="msb-total">…</div><div class="mob-stat-l">題數</div></div>
+  <div class="mob-stat"><div class="mob-stat-v" id="msb-chs">…</div><div class="mob-stat-l">章節</div></div>
+  <div class="mob-stat"><div class="mob-stat-v" id="msb-sessions">…</div><div class="mob-stat-l">測驗人次</div></div>
+  <div class="mob-stat"><div class="mob-stat-v" id="msb-acc">…</div><div class="mob-stat-l">正確率</div></div>
+</div>
 
   <!-- Browse -->
   <div class="view active" id="view-browse">
@@ -223,12 +289,25 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
   </div>
 
 </main>
+
+<!-- Mobile bottom nav -->
+<nav class="mob-nav" id="mob-nav">
+  <button class="mob-nav-btn active" id="mnav-browse" onclick="showView('browse')">
+    <span class="ico">📚</span>瀏覽
+  </button>
+  <button class="mob-nav-btn" id="mnav-quiz" onclick="showView('quiz')">
+    <span class="ico">📝</span>測驗
+  </button>
+  <button class="mob-nav-btn" id="mnav-stats" onclick="showView('stats')">
+    <span class="ico">📊</span>統計
+  </button>
+</nav>
 </div>
 
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, get, set, push, update, onValue, runTransaction }
+import { getDatabase, ref, onValue, runTransaction }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -259,14 +338,6 @@ const CH_TITLES = {
 };
 
 // ── Firebase helpers ─────────────────────────────────────────────
-async function fbGetQuestions() {
-  const snap = await get(ref(db, 'questions'));
-  if (!snap.exists()) return [];
-  const obj = snap.val();
-  return Object.entries(obj).map(([id, q]) => ({ ...q, firebaseId: id }));
-}
-
-
 async function fbRecordAnswer(firebaseId, wasCorrect) {
   const qRef = ref(db, `questions/${firebaseId}`);
   await runTransaction(qRef, (q) => {
@@ -306,6 +377,11 @@ onValue(ref(db, 'meta'), (snap) => {
   document.getElementById('sb-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
   document.getElementById('st-attempts').textContent = ta;
   document.getElementById('st-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
+  // Mobile
+  const ms2 = document.getElementById('msb-sessions');
+  if (ms2) ms2.textContent = meta.quizSessions || 0;
+  const ma = document.getElementById('msb-acc');
+  if (ma) ma.textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
 });
 
 function updateSidebarStats() {
@@ -314,6 +390,11 @@ function updateSidebarStats() {
   const chs = new Set(qs.map(q => q.chapter)).size;
   document.getElementById('sb-ch-count').textContent = chs;
   document.getElementById('ct-all').textContent = qs.length;
+  // Mobile stats
+  const ms = document.getElementById('msb-total');
+  if (ms) ms.textContent = qs.length;
+  const mc = document.getElementById('msb-chs');
+  if (mc) mc.textContent = chs;
 
   const chCounts = {};
   qs.forEach(q => { chCounts[q.chapter] = (chCounts[q.chapter] || 0) + 1; });
@@ -334,11 +415,18 @@ window._curFilter = 'all';
 window.showView = function(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + id).classList.add('active');
+  // Desktop sidebar
   document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
   const nb = document.getElementById('nav-' + id);
   if (nb) nb.classList.add('active');
+  // Mobile bottom nav
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'));
+  const mb = document.getElementById('mnav-' + id);
+  if (mb) mb.classList.add('active');
   if (id === 'browse') renderBrowse();
   if (id === 'stats') renderStats();
+  // Scroll to top on mobile
+  window.scrollTo(0, 0);
 };
 
 window.filterCh = function(ch) {
@@ -353,7 +441,7 @@ function renderBrowse() {
   if (window._curFilter !== 'all') qs = qs.filter(q => q.chapter == window._curFilter);
   const el = document.getElementById('browse-list');
   if (!qs.length) {
-    el.innerHTML = `<div class="empty-state"><div class="big">📭</div><div>${window._curFilter === 'all' ? '題庫尚無題目' : '此章節尚無題目'}</div><div style="font-size:13px;margin-top:4px;">點「生成新題目」開始貢獻！</div></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="big">📭</div><div>${window._curFilter === 'all' ? '題庫尚無題目' : '此章節尚無題目'}</div><div style="font-size:13px;margin-top:4px;">題庫建置中，敬請期待。</div></div>`;
     return;
   }
   el.innerHTML = '';
@@ -380,47 +468,6 @@ function renderBrowse() {
   });
 }
 
-  const typeMap = { concept: 'conceptual understanding', case: 'scenario-based application', analysis: 'comparison and critical analysis' };
-
-  const prompt = `You are a marketing professor creating exam questions for Kotler & Armstrong "Principles of Marketing" 17th edition, Chapter ${ch}: "${CH_TITLES[ch]}".
-Generate EXACTLY ${count} multiple-choice questions.
-Difficulty: ${diffMap[diff]}. Type: ${typeMap[type]}.
-${existingTopics.length ? `Already covered topics: ${existingTopics.join(', ')}. Cover DIFFERENT concepts.` : ''}
-All questions and options in Traditional Chinese. Make distractors plausible.
-Respond ONLY with valid JSON array (no markdown):
-[{"chapter":${ch},"topic":"概念(4-8字)","difficulty":"${diff}","type":"${type}","question":"題目","options":["A","B","C","D"],"answer":0,"explanation":"解說(2-3句)"}]`;
-
-  try {
-    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 2000, messages: [{ role: 'user', content: prompt }] }) });
-    const data = await res.json();
-    const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
-    const match = raw.match(/\[[\s\S]*\]/);
-    if (!match) throw new Error('No JSON');
-    const newQs = JSON.parse(match[0]);
-
-    // Save to Firebase
-    for (const q of newQs) await fbAddQuestion(q);
-    await fbIncrContrib();
-
-    out.innerHTML = `<div class="notice notice-green">✅ 成功生成 ${newQs.length} 題，已存入 Firebase 共享題庫</div>`;
-    const letters = ['A', 'B', 'C', 'D'];
-    newQs.forEach(q => {
-      const div = document.createElement('div');
-      div.className = 'q-card';
-      div.innerHTML = `
-        <div class="q-card-meta"><span class="tag tag-green">Ch.${q.chapter}</span><span class="tag tag-gray">${q.topic||''}</span><span class="tag tag-blue" style="margin-left:auto;">新加入 ✓</span></div>
-        <div class="q-text">${q.question}</div>
-        <div class="q-options">${q.options.map((o,i)=>`<div class="q-opt ${i===q.answer?'correct':''}"><div class="ltr">${letters[i]}</div><span>${o}</span></div>`).join('')}</div>
-        ${q.explanation?`<div class="q-explain">📖 ${q.explanation}</div>`:''}`;
-      out.appendChild(div);
-    });
-  } catch (e) {
-    out.innerHTML = `<div class="notice">生成失敗，請重試。(${e.message})</div>`;
-  }
-  btn.disabled = false;
-  btn.innerHTML = '✨ 生成並存入 Firebase';
-};
 
 // ── Quiz ──────────────────────────────────────────────────────────
 let qzState = { questions: [], idx: 0, score: 0, total: 0 };
