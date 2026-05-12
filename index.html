@@ -104,7 +104,6 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
 .notice{padding:10px 14px;border-radius:var(--r-sm);font-size:13px;line-height:1.6;border-left:3px solid var(--amber);background:var(--amber-tint);color:#5A3A00;margin-bottom:1rem;}
 .notice-green{border-color:var(--emerald2);background:var(--emerald-tint);color:#15392B;}
 .notice-blue{border-color:var(--blue);background:var(--blue-tint);color:#0E2548;}
-.export-box{background:var(--paper2);border-radius:var(--r);padding:1.25rem 1.5rem;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-top:1rem;}
 .divider{height:1px;background:var(--rule);margin:1.25rem 0;}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem;}
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--ink3);}
@@ -125,16 +124,14 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
   <div class="sb-stat-row">
     <div class="sb-stat"><div class="sb-stat-val" id="sb-total">…</div><div class="sb-stat-lbl">總題數</div></div>
     <div class="sb-stat"><div class="sb-stat-val" id="sb-ch-count">…</div><div class="sb-stat-lbl">涵蓋章節</div></div>
-    <div class="sb-stat"><div class="sb-stat-val" id="sb-contrib">…</div><div class="sb-stat-lbl">貢獻人次</div></div>
+    <div class="sb-stat"><div class="sb-stat-val" id="sb-contrib">…</div><div class="sb-stat-lbl">測驗人次</div></div>
     <div class="sb-stat"><div class="sb-stat-val" id="sb-acc">…</div><div class="sb-stat-lbl">平均正確率</div></div>
   </div>
   <div class="sb-div"></div>
   <div class="sb-lbl">功能</div>
   <button class="sb-btn active" onclick="showView('browse')" id="nav-browse">📚 瀏覽題庫</button>
-  <button class="sb-btn" onclick="showView('generate')" id="nav-generate">✨ 生成新題目</button>
   <button class="sb-btn" onclick="showView('quiz')" id="nav-quiz">📝 隨機測驗</button>
   <button class="sb-btn" onclick="showView('stats')" id="nav-stats">📊 題庫統計</button>
-  <button class="sb-btn" onclick="showView('export')" id="nav-export">💾 匯出題庫</button>
   <div class="sb-div"></div>
   <div class="sb-lbl">篩選章節</div>
   <div class="ch-filter" id="ch-filter">
@@ -153,69 +150,9 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
           <span class="live-badge"><span class="live-dot"></span>Firebase 即時同步</span>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="showView('generate')">＋ 生成新題目</button>
     </div>
     <div class="notice notice-blue">💡 <strong>共享題庫</strong>：任何拿到這個頁面連結的人，看到的都是同一份題庫，互相即時同步。</div>
     <div id="browse-list"><div class="empty-state"><div class="big">⏳</div><div>連接 Firebase 中…</div></div></div>
-  </div>
-
-  <!-- Generate -->
-  <div class="view" id="view-generate">
-    <div class="page-header">
-      <div><div class="page-title">生成新題目</div><div class="page-sub">AI 出題，自動存進 Firebase 共享題庫</div></div>
-    </div>
-    <div class="card">
-      <div class="gen-form">
-        <div class="form-field"><label class="form-label">章節</label>
-          <select id="gen-ch">
-            <option value="0">隨機章節</option>
-            <option value="1">Ch.1 Marketing: Creating Customer Value</option>
-            <option value="2">Ch.2 Company and Marketing Strategy</option>
-            <option value="3">Ch.3 Analyzing the Marketing Environment</option>
-            <option value="4">Ch.4 Managing Marketing Information</option>
-            <option value="5">Ch.5 Consumer Markets and Buyer Behavior</option>
-            <option value="6">Ch.6 Business Markets and Business Buyer Behavior</option>
-            <option value="7">Ch.7 Customer Value–Driven Marketing Strategy</option>
-            <option value="8">Ch.8 Products, Services, and Brands</option>
-            <option value="9">Ch.9 Developing New Products and Managing PLC</option>
-            <option value="10">Ch.10 Pricing: Understanding and Capturing Value</option>
-            <option value="11">Ch.11 Pricing Strategies: Additional Considerations</option>
-            <option value="12">Ch.12 Marketing Channels: Delivering Customer Value</option>
-            <option value="13">Ch.13 Retailing and Wholesaling</option>
-            <option value="14">Ch.14 Integrated Marketing Communication Strategy</option>
-            <option value="15">Ch.15 Advertising and Public Relations</option>
-            <option value="16">Ch.16 Personal Selling and Sales Promotion</option>
-            <option value="17">Ch.17 Direct, Online, Social Media, and Mobile Marketing</option>
-            <option value="18">Ch.18 Creating Competitive Advantage</option>
-            <option value="19">Ch.19 The Global Marketplace</option>
-            <option value="20">Ch.20 Sustainable Marketing</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="form-label">難度</label>
-          <select id="gen-diff">
-            <option value="easy">基礎（定義與概念）</option>
-            <option value="medium" selected>中等（理解與應用）</option>
-            <option value="hard">進階（分析與評估）</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="form-label">題目類型</label>
-          <select id="gen-type">
-            <option value="concept">概念題</option>
-            <option value="case">情境應用題</option>
-            <option value="analysis">分析比較題</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="form-label">一次生成幾題</label>
-          <select id="gen-count">
-            <option value="1">1 題</option>
-            <option value="3" selected>3 題</option>
-            <option value="5">5 題</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn btn-primary" id="gen-btn" onclick="generateQuestions()">✨ 生成並存入 Firebase</button>
-    </div>
-    <div id="gen-output"></div>
   </div>
 
   <!-- Quiz -->
@@ -285,22 +222,6 @@ select:focus,input:focus{outline:2px solid var(--emerald);outline-offset:-1px;}
     <div class="card"><h3 style="margin-bottom:1rem;font-size:14px;">難度分佈</h3><div class="bar-chart" id="diff-bar-chart"></div></div>
   </div>
 
-  <!-- Export -->
-  <div class="view" id="view-export">
-    <div class="page-header"><div><div class="page-title">匯出題庫</div><div class="page-sub">從 Firebase 下載完整題庫</div></div></div>
-    <div class="card">
-      <h3 style="margin-bottom:.75rem;font-size:14px;">匯出格式</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;">
-        <button class="btn" onclick="exportJSON()">📄 JSON 完整版</button>
-        <button class="btn" onclick="exportCSV()">📊 CSV（Excel用）</button>
-        <button class="btn" onclick="exportAnki()">🃏 Anki 格式</button>
-      </div>
-      <div class="notice">JSON 包含所有欄位與作答統計。CSV 可直接用 Excel 開啟。Anki 格式可匯入抽認卡練習。</div>
-      <h3 style="margin-bottom:.75rem;margin-top:1rem;font-size:14px;">題庫預覽</h3>
-      <div class="export-box" id="export-preview">載入中…</div>
-    </div>
-  </div>
-
 </main>
 </div>
 
@@ -323,8 +244,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const API_URL = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-sonnet-4-20250514";
 
 const CH_TITLES = {
   1:"Marketing: Creating Customer Value",2:"Company and Marketing Strategy",
@@ -347,11 +266,6 @@ async function fbGetQuestions() {
   return Object.entries(obj).map(([id, q]) => ({ ...q, firebaseId: id }));
 }
 
-async function fbAddQuestion(q) {
-  const newRef = push(ref(db, 'questions'));
-  await set(newRef, { ...q, id: newRef.key, addedAt: new Date().toISOString(), attempts: 0, correct: 0 });
-  return newRef.key;
-}
 
 async function fbRecordAnswer(firebaseId, wasCorrect) {
   const qRef = ref(db, `questions/${firebaseId}`);
@@ -372,9 +286,6 @@ async function fbRecordAnswer(firebaseId, wasCorrect) {
   });
 }
 
-async function fbIncrContrib() {
-  await runTransaction(ref(db, 'meta/contribs'), (v) => (v || 0) + 1);
-}
 
 // ── Realtime sidebar listener ─────────────────────────────────────
 let allQuestions = [];
@@ -385,14 +296,13 @@ onValue(ref(db, 'questions'), (snap) => {
   updateSidebarStats();
   if (document.getElementById('view-browse').classList.contains('active')) renderBrowse();
   if (document.getElementById('view-stats').classList.contains('active')) renderStats();
-  if (document.getElementById('view-export').classList.contains('active')) renderExport();
 });
 
 onValue(ref(db, 'meta'), (snap) => {
   const meta = snap.exists() ? snap.val() : {};
   const ta = meta.totalAttempts || 0;
   const tc = meta.totalCorrect || 0;
-  document.getElementById('sb-contrib').textContent = meta.contribs || 0;
+  document.getElementById('sb-contrib').textContent = meta.quizSessions || 0;
   document.getElementById('sb-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
   document.getElementById('st-attempts').textContent = ta;
   document.getElementById('st-acc').textContent = ta > 0 ? Math.round(tc / ta * 100) + '%' : '—';
@@ -429,7 +339,6 @@ window.showView = function(id) {
   if (nb) nb.classList.add('active');
   if (id === 'browse') renderBrowse();
   if (id === 'stats') renderStats();
-  if (id === 'export') renderExport();
 };
 
 window.filterCh = function(ch) {
@@ -471,22 +380,6 @@ function renderBrowse() {
   });
 }
 
-// ── Generate ──────────────────────────────────────────────────────
-window.generateQuestions = async function() {
-  const chSel = parseInt(document.getElementById('gen-ch').value);
-  const diff = document.getElementById('gen-diff').value;
-  const type = document.getElementById('gen-type').value;
-  const count = parseInt(document.getElementById('gen-count').value);
-  const ch = chSel === 0 ? Math.ceil(Math.random() * 20) : chSel;
-
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> AI 生成中…';
-  const out = document.getElementById('gen-output');
-  out.innerHTML = `<div class="card" style="text-align:center;padding:1.5rem;color:var(--ink3);"><div class="ai-dots"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div></div><div style="font-size:13px;margin-top:8px;">生成 Chapter ${ch} 題目中…</div></div>`;
-
-  const existingTopics = allQuestions.filter(q => q.chapter == ch).map(q => q.topic);
-  const diffMap = { easy: 'basic definition and recall', medium: 'understanding and application', hard: 'analysis, evaluation, and synthesis' };
   const typeMap = { concept: 'conceptual understanding', case: 'scenario-based application', analysis: 'comparison and critical analysis' };
 
   const prompt = `You are a marketing professor creating exam questions for Kotler & Armstrong "Principles of Marketing" 17th edition, Chapter ${ch}: "${CH_TITLES[ch]}".
@@ -541,9 +434,34 @@ window.startQuiz = function() {
     pool = pool.filter(q => q.chapter >= a && q.chapter <= b);
   }
   if (pool.length < 3) { document.getElementById('qz-warn').style.display = 'block'; return; }
-  // Prioritize less-attempted questions
-  pool.sort((a, b) => (a.attempts || 0) - (b.attempts || 0));
-  const picked = pool.slice(0, Math.min(total, pool.length)).sort(() => Math.random() - 0.5);
+
+  // True weighted random: weight by (1 / (attempts + 1)) so less-attempted
+  // questions are MORE likely but all questions have a chance
+  // Step 1: assign weights
+  const weighted = pool.map(q => ({
+    q,
+    weight: 1 / ((q.attempts || 0) + 1)
+  }));
+
+  // Step 2: weighted shuffle — pick `total` questions without replacement
+  const picked = [];
+  const available = [...weighted];
+  const n = Math.min(total, available.length);
+
+  for (let i = 0; i < n; i++) {
+    const totalWeight = available.reduce((sum, item) => sum + item.weight, 0);
+    let rand = Math.random() * totalWeight;
+    let chosenIdx = 0;
+    for (let j = 0; j < available.length; j++) {
+      rand -= available[j].weight;
+      if (rand <= 0) { chosenIdx = j; break; }
+    }
+    picked.push(available[chosenIdx].q);
+    available.splice(chosenIdx, 1);
+  }
+
+  // Step 3: final shuffle so order is also random
+  picked.sort(() => Math.random() - 0.5);
   qzState = { questions: picked, idx: 0, score: 0, total: picked.length };
   document.getElementById('quiz-setup').style.display = 'none';
   document.getElementById('quiz-area').style.display = 'block';
@@ -604,7 +522,7 @@ window.qzNext = function() {
   renderQzProg(); renderQzQ();
 };
 
-function finishQuiz() {
+async function finishQuiz() {
   document.getElementById('quiz-area').style.display = 'none';
   document.getElementById('quiz-result').style.display = 'block';
   const pct = Math.round(qzState.score / qzState.total * 100);
@@ -613,6 +531,12 @@ function finishQuiz() {
   document.getElementById('qz-final-msg').textContent =
     ['繼續加油，多做幾次就能掌握！', '還不錯！重點概念已有基礎。', '表現良好，繼續保持！', '優秀！你對行銷學有深入理解。']
     [Math.min(Math.floor(pct / 25), 3)];
+  // Count as a quiz session if at least 5 questions were answered
+  if (qzState.total >= 5) {
+    try {
+      await runTransaction(ref(db, 'meta/quizSessions'), (v) => (v || 0) + 1);
+    } catch(e) {}
+  }
 }
 
 window.endQuizEarly = finishQuiz;
@@ -656,44 +580,6 @@ function renderStats() {
   });
 }
 
-// ── Export ────────────────────────────────────────────────────────
-function renderExport() {
-  const preview = JSON.stringify(allQuestions.slice(0, 3), null, 2) + `\n\n// … 共 ${allQuestions.length} 題（從 Firebase 即時讀取）`;
-  document.getElementById('export-preview').textContent = preview;
-}
-
-window.exportJSON = function() {
-  const blob = new Blob([JSON.stringify(allQuestions, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `kotler17e_firebase_${new Date().toISOString().slice(0,10)}.json`; a.click();
-};
-
-window.exportCSV = function() {
-  const rows = [['id','chapter','topic','difficulty','type','question','optA','optB','optC','optD','answer','explanation','attempts','correct']];
-  allQuestions.forEach(q => {
-    rows.push([q.firebaseId, q.chapter, q.topic||'', q.difficulty, q.type||'',
-      '"'+(q.question||'').replace(/"/g,'""')+'"',
-      ...(q.options||[]).map(o=>'"'+o.replace(/"/g,'""')+'"'),
-      q.answer, '"'+(q.explanation||'').replace(/"/g,'""')+'"',
-      q.attempts||0, q.correct||0]);
-  });
-  const csv = rows.map(r => r.join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `kotler17e_${new Date().toISOString().slice(0,10)}.csv`; a.click();
-};
-
-window.exportAnki = function() {
-  const lines = allQuestions.map(q => {
-    const front = `[Ch.${q.chapter}] ${q.question}`;
-    const opts = (q.options||[]).map((o,i)=>`${String.fromCharCode(65+i)}) ${o}`).join('<br>');
-    const back = `正確答案：${String.fromCharCode(65+q.answer)}) ${(q.options||[])[q.answer]}<br><br>${q.explanation||''}`;
-    return `"${front}<br><br>${opts}"\t"${back}"`;
-  }).join('\n');
-  const blob = new Blob([lines], { type: 'text/plain' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `kotler17e_anki_${new Date().toISOString().slice(0,10)}.txt`; a.click();
-};
 
 </script>
 </body>
